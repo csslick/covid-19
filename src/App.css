@@ -24,6 +24,13 @@ section {
   padding: 1em;
 }
 
+.chart {
+  display: flex;
+  flex-wrap: wrap;
+}
 figure {
-  margin: 0; padding: 0;
+  flex: 1;
+  margin: 20px; 
+  padding: 1em;
+  border: 1px solid rgba(0,0,0,0.2);
 }
