@@ -7,3 +7,5 @@
 
 `npm install axios react-chartjs-2`
 
+## demo: https://covid-19-csslick.netlify.app/
+
