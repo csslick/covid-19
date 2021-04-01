@@ -23,9 +23,22 @@ export default function Contents() {
     datasets: [
       {
         label: "국내 누적 확진자",
-        backgroundColor: "#E82B26",
+        backgroundColor: "#3C8755",
         fill: true,
         data: [10, 5, 3, 0],
+      }
+    ],
+  });
+
+  // 누적 확진, 해제, 사망(도넛 그래프용)
+  const [comparedData, setComparedData] = useState({
+    labels: ["확진자", "격리해재", "사망"],
+    datasets: [
+      {
+        label: "누적 확진, 해제, 사망 비율",
+        backgroundColor: ["#E82B26", "#4B9ACB", "#6c6c6c"],
+        fill: true,
+        data: [1, 2, 3, 0],
       }
     ],
   });
@@ -40,8 +53,6 @@ export default function Contents() {
         const month = Number(item.Date.split('-')[1]);
         const date = Number(item.Date.split('-')[2].slice(0,2));
         const last_date = Number(new Date(year, month, 0).getDate());
-        // 격리자(active)
-        const active = item.Active
        
         // 월별 말일 데이터만 추출(누적 확진자 데이터만 필요)
         if(date === last_date){
@@ -50,8 +61,10 @@ export default function Contents() {
             year: year,
             month: month + '월',
             date: date,
-            confirmed: item.Confirmed,
-            active: item.Active,
+            confirmed: item.Confirmed, // 확진자
+            active: item.Active,  // 격리자
+            deaths: item.Deaths,  // 사망
+            recovered: item.Recovered,  // 격리해제
           });
         }         
 
@@ -82,6 +95,24 @@ export default function Contents() {
           }
         ],
       });
+
+      const last_data = _data[_data.length-1];
+      setComparedData({
+        labels: ["확진자", "격리해재", "사망"],
+        datasets: [
+          {
+            label: "누적 확진, 해제, 사망 비율",
+            backgroundColor: ["#E82B26", "#4B9ACB", "#6c6c6c"],
+            fill: true,
+            data: [
+              last_data.confirmed,
+              last_data.recovered, 
+              last_data.deaths,
+            ],
+          }
+        ],
+      });
+
       console.log(data)
     }
 
@@ -119,6 +150,17 @@ export default function Contents() {
             options={
               {
                 title: {display: true, text:"월별 격리자 현황", fontSize: 16}, 
+                legend: {display: true, position: 'bottom'}
+              }
+            }
+          />
+        </figure>      
+        <figure>
+          <Doughnut
+            data={comparedData}
+            options={
+              {
+                title: {display: true, text:"누적 확진, 해제, 사망", fontSize: 16}, 
                 legend: {display: true, position: 'bottom'}
               }
             }
