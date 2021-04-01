@@ -1,59 +1,29 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 
 export default function Contents() {
 
   // 확진자
-  const [data, setData] = useState({
-    labels: ["1월", "2월", "3월"],
-    datasets: [
-      {
-        label: "국내 누적 확진자",
-        backgroundColor: "#E82B26",
-        fill: true,
-        data: [10, 5, 3, 0],
-      }
-    ],
-  });
+  const [confirmedData, setConfirmedData] = useState({});
 
   // 격리자(Active)
-  const [activeData, setActiveData] = useState({
-    labels: ["1월", "2월", "3월"],
-    datasets: [
-      {
-        label: "국내 누적 확진자",
-        backgroundColor: "#3C8755",
-        fill: true,
-        data: [10, 5, 3, 0],
-      }
-    ],
-  });
+  const [activeData, setActiveData] = useState({});
 
   // 누적 확진, 해제, 사망(도넛 그래프용)
-  const [comparedData, setComparedData] = useState({
-    labels: ["확진자", "격리해재", "사망"],
-    datasets: [
-      {
-        label: "누적 확진, 해제, 사망 비율",
-        backgroundColor: ["#E82B26", "#4B9ACB", "#6c6c6c"],
-        fill: true,
-        data: [1, 2, 3, 0],
-      }
-    ],
-  });
+  const [comparedData, setComparedData] = useState({});
 
   useEffect(() => {
-    function makeData(items) {
+    const makeData = (items) => {
       const _data = [];
 
       // 날짜 데이터 가공
       items.forEach(item => {
-        const year = Number(item.Date.split('-')[0]);
-        const month = Number(item.Date.split('-')[1]);
+        const year = item.Date.split('-')[0];
+        const month = item.Date.split('-')[1];
         const date = Number(item.Date.split('-')[2].slice(0,2));
         const last_date = Number(new Date(year, month, 0).getDate());
-       
+        
         // 월별 말일 데이터만 추출(누적 확진자 데이터만 필요)
         if(date === last_date){
           console.log('last date= ', last_date)
@@ -71,7 +41,7 @@ export default function Contents() {
       });
 
       const labels = _data.map(d => d.year + ' ' + d.month) // 월
-      setData({
+      setConfirmedData({
         labels: labels,
         datasets: [
           {
@@ -113,10 +83,10 @@ export default function Contents() {
         ],
       });
 
-      console.log(data)
     }
 
-    axios
+    const fetchData = () => {
+      axios
       .get("https://api.covid19api.com/total/dayone/country/kr")
       .then(function (response) {
         // handle success
@@ -126,6 +96,8 @@ export default function Contents() {
         // handle error
         console.log(error);
       })  
+    }
+    fetchData();
 
   }, []);
 
@@ -135,7 +107,7 @@ export default function Contents() {
       <article className="chart">
         <figure>
           <Bar 
-            data={data}
+            data={confirmedData}
             options={
               {
                 title: {display: true, text:"누적 확진자 추이", fontSize: 16}, 
