@@ -1,4 +1,4 @@
-# Demo: https://covid-19-csslick.netlify.app/
+# Demo: [https://covid-19-l7nwz82qg-digitone.vercel.app/](https://covid-19-l7nwz82qg-digitone.vercel.app/)
 
 ## COVID-19 info app
 - COVID-19 API HOME: https://documenter.getpostman.com/view/10808728/SzS8rjbc
